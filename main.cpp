@@ -10,6 +10,8 @@
 #include "keccak.h"
 #include <stdio.h>
 
+namespace fs = boost::filesystem;
+namespace pt = boost::property_tree;
 using namespace std;
 
 namespace fs = boost::filesystem;
