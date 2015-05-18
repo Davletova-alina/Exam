@@ -5,6 +5,8 @@
 #include <boost/filesystem.hpp>  //BOOST::FILESYSTEM с помощью которого считываем директорию
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp> //BOOST Serialization
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 #include "keccak.h"
 #include <stdio.h>
 
@@ -130,6 +132,26 @@ vector<Fileinfo> compare_lists(vector<Fileinfo> newfl, vector<Fileinfo> oldfl) {
 
 //Записываем через протобаф. Filelist - внешняя структура, в которую кладем элементы Filep
 void save2bsr(std::string filename, std::vector<Fileinfo> vec_finfo) {
+	
+	cout << "Do you want save as json?" << endl;
+	string x;
+	
+	
+	if (x == "yes"){
+	boost::property_tree::ptree tree;
+
+	int i = 1;
+	
+	for (Fileinfo it : vec_finfo) {
+		tree.put("File" + std::to_string(i), it.path);
+		tree.put("Size" + std::to_string(i), it.size);
+		tree.put("Hash" + std::to_string(i), it.hash);
+		i++;
+		
+	}
+
+	
+	int c = 0;
 	std::ofstream ofs("result.bsr"); //имя файла
 	boost::archive::text_oarchive oa(ofs);
 	std::string hash = output1;
@@ -140,6 +162,13 @@ void save2bsr(std::string filename, std::vector<Fileinfo> vec_finfo) {
 		cout << it.size << endl;
 		oa << it.hash; // добавить позже
 		cout << it.hash << endl;
+		
+		c = c + it.size;
+	}
+
+        //Output of general size
+         cout << "General size:" <<
+                  c << endl;
 	}
 
 	ofs.close();
